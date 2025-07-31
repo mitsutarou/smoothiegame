@@ -139,7 +139,7 @@
       });
       document.getElementById("gameScreen").classList.add("hidden");
       document.getElementById("mixerScreen").classList.remove("hidden");
-      let mixerFrames = ["mikisa-1.png", "mikisa-2.png", "mikisa-1.png", "mikisa-3.png", "mikisa-1.png"];
+      let mixerFrames = ["mikisa-1.png", "mikisa-2.png", "mikisa-1.png", "mikisa-3.png", "mikisa-1.png", "mikisa-2.png", "mikisa-1.png", "mikisa-3.png",, "mikisa-1.png" ];
       let idx = 0;
       const mixerImg = document.getElementById("mixerImage");
       const interval = setInterval(() => {
@@ -150,7 +150,7 @@
           document.getElementById("mixerScreen").classList.add("hidden");
           document.getElementById("drinkScreen").classList.remove("hidden");
         }
-      }, 1000);
+      }, 500);
     }
 
     function goToGrowth() {
