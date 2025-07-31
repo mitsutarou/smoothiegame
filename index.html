@@ -35,19 +35,16 @@
       margin-top: 1rem;
     }
     .drop-zone img.mixer-base {
-      width: 300px;
+      width: 400px;
     }
     .drop-zone p {
-      position: absolute;
-      top: 10px;
-      left: 50%;
-      transform: translateX(-50%);
+      margin-top: 10px;
       font-size: 0.8rem;
       color: #9b7956;
     }
     #selectedFoods {
       position: absolute;
-      top: 60px;
+      top: 20px;
       left: 50%;
       transform: translateX(-50%);
       display: flex;
@@ -57,7 +54,7 @@
     #selectedFoods img {
       width: 48px;
       height: 48px;
-      margin: 0.3rem 0;
+      margin: 1px 0;
     }
     #foodOptions img {
       width: 96px;
@@ -85,8 +82,8 @@
     <div id="foodOptions"></div>
     <div class="drop-zone" id="dropZone" ondrop="drop(event)" ondragover="allowDrop(event)">
       <img src="mikisa-4.png" alt="ミキサー台" class="mixer-base">
-      <p>ここに4つの食材をドロップ</p>
       <div id="selectedFoods"></div>
+      <p>ここに4つの食材をドロップ</p>
     </div>
     <button onclick="mixSmoothie()">ミキサーで混ぜる</button>
   </div>
