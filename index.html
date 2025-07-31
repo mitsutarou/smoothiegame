@@ -29,6 +29,24 @@
       margin: 0.5rem;
       display: inline-block;
     }
+    #gameContent {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-top: 2rem;
+    }
+    #foodOptions {
+      width: 45%;
+      text-align: center;
+    }
+    #foodOptions img {
+      width: 96px;
+      height: 96px;
+    }
+    .drop-zone-container {
+      width: 45%;
+      text-align: center;
+    }
     .drop-zone {
       position: relative;
       display: inline-block;
@@ -48,7 +66,7 @@
     }
     #selectedFoods {
       position: absolute;
-      top: 140px;
+      top: 280px;
       left: 50%;
       transform: translateX(-50%);
       display: flex;
@@ -58,11 +76,7 @@
     #selectedFoods img {
       width: 48px;
       height: 48px;
-      margin: 0px 0;
-    }
-    #foodOptions img {
-      width: 96px;
-      height: 96px;
+      margin: 2px 0;
     }
     #mixerImage {
       width: 300px;
@@ -83,11 +97,15 @@
 
   <div id="gameScreen" class="screen hidden">
     <h2 id="mealTitle">朝スムージーを作ろう</h2>
-    <div id="foodOptions"></div>
-    <div class="drop-zone" id="dropZone" ondrop="drop(event)" ondragover="allowDrop(event)">
-      <img src="mikisa-4.png" alt="ミキサー台" class="mixer-base">
-      <div id="selectedFoods"></div>
-      <p>ここに4つの食材をドロップ</p>
+    <div id="gameContent">
+      <div class="drop-zone-container">
+        <div class="drop-zone" id="dropZone" ondrop="drop(event)" ondragover="allowDrop(event)">
+          <img src="mikisa-4.png" alt="ミキサー台" class="mixer-base">
+          <div id="selectedFoods"></div>
+          <p>ここに4つの食材をドロップ</p>
+        </div>
+      </div>
+      <div id="foodOptions"></div>
     </div>
     <button onclick="mixSmoothie()">ミキサーで混ぜる</button>
   </div>
