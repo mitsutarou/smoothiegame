@@ -11,6 +11,7 @@
     .food-option { cursor: pointer; margin: 0.5rem; display: inline-block; }
     .drop-zone { border: 2px dashed #888; padding: 1rem; margin-top: 1rem; min-height: 100px; }
     #selectedFoods { margin-top: 1rem; }
+    #mixerImage { width: 200px; height: auto; }
   </style>
 </head>
 <body>
@@ -31,8 +32,14 @@
     <button onclick="mixSmoothie()">ミキサーで混ぜる</button>
   </div>
 
+  <div id="mixerScreen" class="screen hidden">
+    <h2>ミキサー中...</h2>
+    <img id="mixerImage" src="mikisa-1.png" alt="ミキサー">
+  </div>
+
   <div id="drinkScreen" class="screen hidden">
     <h2>飲んでみよう！</h2>
+    <img src="smoothie.png" alt="スムージー" width="100">
     <p>ごくごくごく...</p>
     <button onclick="goToGrowth()">次へ</button>
   </div>
@@ -131,7 +138,19 @@
         allAttributes.push(nutrient);
       });
       document.getElementById("gameScreen").classList.add("hidden");
-      document.getElementById("drinkScreen").classList.remove("hidden");
+      document.getElementById("mixerScreen").classList.remove("hidden");
+      let mixerFrames = ["mikisa-1.png", "mikisa-2.png", "mikisa-1.png", "mikisa-3.png", "mikisa-1.png"];
+      let idx = 0;
+      const mixerImg = document.getElementById("mixerImage");
+      const interval = setInterval(() => {
+        mixerImg.src = mixerFrames[idx];
+        idx++;
+        if (idx >= mixerFrames.length) {
+          clearInterval(interval);
+          document.getElementById("mixerScreen").classList.add("hidden");
+          document.getElementById("drinkScreen").classList.remove("hidden");
+        }
+      }, 1000);
     }
 
     function goToGrowth() {
