@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>スムージー成長ゲーム</title>
+  <style>
+    body { font-family: sans-serif; text-align: center; background-color: #f0f8ff; }
+    .hidden { display: none; }
+    .screen { padding: 2rem; }
+    button { margin: 1rem; padding: 0.5rem 1rem; font-size: 1.2rem; }
+    .food-option { cursor: pointer; margin: 0.5rem; display: inline-block; }
+    .drop-zone { border: 2px dashed #888; padding: 1rem; margin-top: 1rem; min-height: 100px; }
+    #selectedFoods { margin-top: 1rem; }
+  </style>
+</head>
+<body>
+  <div id="titleScreen" class="screen">
+    <h1>スムージー成長ゲーム</h1>
+    <button onclick="startGame()">スタート</button>
+    <button onclick="showHowToPlay()">遊び方</button>
+    <button onclick="showZukan()">図鑑</button>
+  </div>
+
+  <div id="gameScreen" class="screen hidden">
+    <h2 id="mealTitle">朝スムージーを作ろう</h2>
+    <div id="foodOptions"></div>
+    <div class="drop-zone" id="dropZone" ondrop="drop(event)" ondragover="allowDrop(event)">
+      <p>ここに4つの食材をドロップ</p>
+      <div id="selectedFoods"></div>
+    </div>
+    <button onclick="mixSmoothie()">ミキサーで混ぜる</button>
+  </div>
+
+  <div id="drinkScreen" class="screen hidden">
+    <h2>飲んでみよう！</h2>
+    <p>ごくごくごく...</p>
+    <button onclick="goToGrowth()">次へ</button>
+  </div>
+
+  <div id="growthScreen" class="screen hidden">
+    <h2>キャラクターの成長！</h2>
+    <div id="growthResult"></div>
+    <p id="result-comment"></p>
+    <button onclick="nextStage()">次へ</button>
+  </div>
+
+  <div id="finalResultScreen" class="screen hidden">
+    <h2>最終成長！</h2>
+    <div id="finalResult"></div>
+    <p id="finalComment"></p>
+    <button onclick="resetGame()">タイトルへ戻る</button>
+  </div>
+
+  <script>
+    const foodData = [
+      "1gohan.png", "1pan.png", "1potato.png",
+      "2a-monndo.png", "2be-kon.png", "2mayo.png",
+      "3niku.png", "3sakana.png", "3tamago.png",
+      "4chingensai.png", "4niboshi.png", "4wakame.png",
+      "5ninzin.png", "5ringo.png", "5tomato.png"
+    ];
+
+    const nutrientMap = {
+      '1': '炭水化物',
+      '2': '脂質',
+      '3': 'タンパク質',
+      '4': 'ミネラル',
+      '5': 'ビタミン'
+    };
+
+    let stage = 0;
+    let allAttributes = [];
+    let selectedFoods = [];
+
+    function startGame() {
+      document.querySelectorAll(".screen").forEach(s => s.classList.add("hidden"));
+      document.getElementById("gameScreen").classList.remove("hidden");
+      stage = 0;
+      allAttributes = [];
+      selectedFoods = [];
+      document.getElementById("mealTitle").textContent = ["朝", "昼", "晩"][stage] + "スムージーを作ろう";
+      loadFoodOptions();
+    }
+
+    function loadFoodOptions() {
+      const container = document.getElementById("foodOptions");
+      container.innerHTML = "";
+      foodData.forEach(name => {
+        const img = document.createElement("img");
+        img.src = name;
+        img.alt = name;
+        img.width = 64;
+        img.height = 64;
+        img.draggable = true;
+        img.ondragstart = (e) => drag(e, name);
+        container.appendChild(img);
+      });
+      document.getElementById("selectedFoods").innerHTML = "";
+      selectedFoods = [];
+    }
+
+    function drag(ev, name) {
+      ev.dataTransfer.setData("text", name);
+    }
+
+    function allowDrop(ev) {
+      ev.preventDefault();
+    }
+
+    function drop(ev) {
+      ev.preventDefault();
+      const name = ev.dataTransfer.getData("text");
+      if (selectedFoods.length >= 4 || selectedFoods.includes(name)) return;
+      selectedFoods.push(name);
+      const img = document.createElement("img");
+      img.src = name;
+      img.alt = name;
+      img.width = 32;
+      img.height = 32;
+      document.getElementById("selectedFoods").appendChild(img);
+    }
+
+    function mixSmoothie() {
+      if (selectedFoods.length < 4) {
+        alert("4つの食材を選んでください！");
+        return;
+      }
+      selectedFoods.forEach(name => {
+        const nutrientKey = name[0];
+        const nutrient = nutrientMap[nutrientKey];
+        allAttributes.push(nutrient);
+      });
+      document.getElementById("gameScreen").classList.add("hidden");
+      document.getElementById("drinkScreen").classList.remove("hidden");
+    }
+
+    function goToGrowth() {
+      document.getElementById("drinkScreen").classList.add("hidden");
+      document.getElementById("growthScreen").classList.remove("hidden");
+      showGrowthComment();
+    }
+
+    function nextStage() {
+      document.getElementById("growthScreen").classList.add("hidden");
+      if (stage < 2) {
+        stage++;
+        document.getElementById("gameScreen").classList.remove("hidden");
+        document.getElementById("mealTitle").textContent = ["朝", "昼", "晩"][stage] + "スムージーを作ろう";
+        loadFoodOptions();
+      } else {
+        document.getElementById("finalResultScreen").classList.remove("hidden");
+        const text = analyzeAttributes(false);
+        document.getElementById("finalResult").textContent = `完全体：${text.title}`;
+        document.getElementById("finalComment").textContent = text.comment;
+      }
+    }
+
+    function showGrowthComment() {
+      const text = analyzeAttributes(true);
+      document.getElementById("growthResult").textContent = `成長中：${text.title}`;
+      document.getElementById("result-comment").textContent = text.comment;
+    }
+
+    function analyzeAttributes(isMid) {
+      const count = {};
+      allAttributes.forEach(attr => {
+        count[attr] = (count[attr] || 0) + 1;
+      });
+      const sufficient = Object.entries(count).filter(([_, v]) => v >= 2).map(([k]) => k);
+
+      if (sufficient.length <= 2) return { title: "栄養不足", comment: "バランスが偏っているよ！" };
+      if (sufficient.includes("タンパク質") && sufficient.includes("ミネラル")) return { title: "大成長期", comment: "ぐんぐん成長中！" };
+      if (sufficient.includes("炭水化物") && sufficient.includes("脂質") && sufficient.includes("タンパク質")) return { title: "パワー全開", comment: "エネルギッシュ！" };
+      if (sufficient.includes("ビタミン") && sufficient.includes("ミネラル")) return { title: "整った〜", comment: "中からキレイ！" };
+      if (sufficient.length >= 4) return { title: "完全体", comment: "完璧なバランス！" };
+      return { title: "普通", comment: "まあまあかな？" };
+    }
+
+    function resetGame() {
+      document.querySelectorAll(".screen").forEach(s => s.classList.add("hidden"));
+      document.getElementById("titleScreen").classList.remove("hidden");
+    }
+
+    function showHowToPlay() {
+      alert("4つの食材をドラッグしてミキサーに入れよう！朝昼晩で栄養バランスを整えてキャラを育てよう！");
+    }
+
+    function showZukan() {
+      alert("図鑑は準備中！");
+    }
+  </script>
+</body>
+</html>
