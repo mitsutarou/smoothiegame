@@ -4,14 +4,53 @@
   <meta charset="UTF-8">
   <title>スムージー成長ゲーム</title>
   <style>
-    body { font-family: sans-serif; text-align: center; background-color: #f0f8ff; }
+    @import url('https://fonts.googleapis.com/css2?family=Kosugi+Maru&display=swap');
+
+    body {
+      font-family: 'Kosugi Maru', sans-serif;
+      text-align: center;
+      background-color: #fefdef;
+      color: #9b7956;
+    }
     .hidden { display: none; }
     .screen { padding: 2rem; }
-    button { margin: 1rem; padding: 0.5rem 1rem; font-size: 1.2rem; }
-    .food-option { cursor: pointer; margin: 0.5rem; display: inline-block; }
-    .drop-zone { border: 2px dashed #888; padding: 1rem; margin-top: 1rem; min-height: 100px; }
-    #selectedFoods { margin-top: 1rem; }
-    #mixerImage { width: 200px; height: auto; }
+    button {
+      margin: 1rem;
+      padding: 1rem 2rem;
+      font-size: 1.5rem;
+      font-family: 'Kosugi Maru', sans-serif;
+      background-color: #fff3e0;
+      border: 2px solid #9b7956;
+      color: #9b7956;
+      border-radius: 10px;
+    }
+    .food-option {
+      cursor: pointer;
+      margin: 0.5rem;
+      display: inline-block;
+    }
+    .drop-zone {
+      border: 2px dashed #9b7956;
+      padding: 2rem;
+      margin-top: 1rem;
+      min-height: 120px;
+    }
+    #selectedFoods img {
+      width: 48px;
+      height: 48px;
+      margin: 0.3rem;
+    }
+    #foodOptions img {
+      width: 96px;
+      height: 96px;
+    }
+    #mixerImage {
+      width: 300px;
+      height: auto;
+    }
+    h1, h2, p {
+      font-size: 2rem;
+    }
   </style>
 </head>
 <body>
@@ -39,13 +78,14 @@
 
   <div id="drinkScreen" class="screen hidden">
     <h2>飲んでみよう！</h2>
-    <img src="smoothie.png" alt="スムージー" width="100">
+    <img src="smoothie.png" alt="スムージー" width="200">
     <p>ごくごくごく...</p>
     <button onclick="goToGrowth()">次へ</button>
   </div>
 
   <div id="growthScreen" class="screen hidden">
     <h2>キャラクターの成長！</h2>
+    <img id="monsterImage" src="" alt="モンスター" width="200">
     <div id="growthResult"></div>
     <p id="result-comment"></p>
     <button onclick="nextStage()">次へ</button>
@@ -53,6 +93,7 @@
 
   <div id="finalResultScreen" class="screen hidden">
     <h2>最終成長！</h2>
+    <img id="finalMonsterImage" src="" alt="最終モンスター" width="200">
     <div id="finalResult"></div>
     <p id="finalComment"></p>
     <button onclick="resetGame()">タイトルへ戻る</button>
@@ -96,8 +137,6 @@
         const img = document.createElement("img");
         img.src = name;
         img.alt = name;
-        img.width = 64;
-        img.height = 64;
         img.draggable = true;
         img.ondragstart = (e) => drag(e, name);
         container.appendChild(img);
@@ -122,8 +161,6 @@
       const img = document.createElement("img");
       img.src = name;
       img.alt = name;
-      img.width = 32;
-      img.height = 32;
       document.getElementById("selectedFoods").appendChild(img);
     }
 
@@ -139,7 +176,7 @@
       });
       document.getElementById("gameScreen").classList.add("hidden");
       document.getElementById("mixerScreen").classList.remove("hidden");
-      let mixerFrames = ["mikisa-1.png", "mikisa-2.png", "mikisa-1.png", "mikisa-3.png", "mikisa-1.png", "mikisa-2.png", "mikisa-1.png", "mikisa-3.png",, "mikisa-1.png" ];
+      let mixerFrames = ["mikisa-1.png", "mikisa-2.png", "mikisa-1.png", "mikisa-3.png", "mikisa-1.png"];
       let idx = 0;
       const mixerImg = document.getElementById("mixerImage");
       const interval = setInterval(() => {
@@ -150,7 +187,7 @@
           document.getElementById("mixerScreen").classList.add("hidden");
           document.getElementById("drinkScreen").classList.remove("hidden");
         }
-      }, 500);
+      }, 1000);
     }
 
     function goToGrowth() {
@@ -171,6 +208,7 @@
         const text = analyzeAttributes(false);
         document.getElementById("finalResult").textContent = `完全体：${text.title}`;
         document.getElementById("finalComment").textContent = text.comment;
+        document.getElementById("finalMonsterImage").src = text.img;
       }
     }
 
@@ -178,6 +216,7 @@
       const text = analyzeAttributes(true);
       document.getElementById("growthResult").textContent = `成長中：${text.title}`;
       document.getElementById("result-comment").textContent = text.comment;
+      document.getElementById("monsterImage").src = stage === 0 ? "monster1.png" : "monster2.png";
     }
 
     function analyzeAttributes(isMid) {
@@ -187,12 +226,12 @@
       });
       const sufficient = Object.entries(count).filter(([_, v]) => v >= 2).map(([k]) => k);
 
-      if (sufficient.length <= 2) return { title: "栄養不足", comment: "バランスが偏っているよ！" };
-      if (sufficient.includes("タンパク質") && sufficient.includes("ミネラル")) return { title: "大成長期", comment: "ぐんぐん成長中！" };
-      if (sufficient.includes("炭水化物") && sufficient.includes("脂質") && sufficient.includes("タンパク質")) return { title: "パワー全開", comment: "エネルギッシュ！" };
-      if (sufficient.includes("ビタミン") && sufficient.includes("ミネラル")) return { title: "整った〜", comment: "中からキレイ！" };
-      if (sufficient.length >= 4) return { title: "完全体", comment: "完璧なバランス！" };
-      return { title: "普通", comment: "まあまあかな？" };
+      if (sufficient.length <= 2) return { title: "栄養不足", comment: "バランスが偏っているよ！", img: "monster3.png" };
+      if (sufficient.includes("炭水化物") && sufficient.includes("脂質") && sufficient.includes("タンパク質")) return { title: "パワー全開", comment: "エネルギッシュ！", img: "monster4.png" };
+      if (sufficient.includes("タンパク質") && sufficient.includes("ミネラル")) return { title: "大成長期", comment: "ぐんぐん成長中！", img: "monster5.png" };
+      if (sufficient.includes("ミネラル") && sufficient.includes("ビタミン")) return { title: "整った〜", comment: "中からキレイ！", img: "monster6.png" };
+      if (sufficient.length >= 4) return { title: "完全体", comment: "完璧なバランス！", img: "monster7.png" };
+      return { title: "普通", comment: "まあまあかな？", img: "monster3.png" };
     }
 
     function resetGame() {
