@@ -141,6 +141,14 @@
     <button onclick="resetGame()">タイトルへ戻る</button>
   </div>
 
+  <div id="zukanScreen" class="screen hidden">
+  <h2>図鑑</h2>
+  <div id="zukanGallery" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem;"></div>
+  <div id="zukanDetail" style="margin-top: 2rem;"></div>
+  <button onclick="backToTitle()">タイトルに戻る</button>
+</div>
+
+
   <script>
     const foodData = [
       "1gohan.png", "1pan.png", "1potato.png",
@@ -285,9 +293,50 @@
       alert("4つの食材をドラッグしてミキサーに入れよう！朝昼晩で栄養バランスを整えてキャラを育てよう！");
     }
 
-    function showZukan() {
-      alert("図鑑は準備中！");
-    }
+    const monsterInfo = [
+  { img: "monster1.png", name: "はじまりモンスター", description: "スムージーの旅はここから！" },
+  { img: "monster2.png", name: "スムージー初心者", description: "まだまだこれから成長するぞ！" },
+  { img: "monster3.png", name: "ふつうモンスター", description: "バランスが今ひとつ..." },
+  { img: "monster4.png", name: "エネルギッシュくん", description: "パワーに満ちた元気モンスター！" },
+  { img: "monster5.png", name: "ぐんぐんモンスター", description: "急成長中で将来有望！" },
+  { img: "monster6.png", name: "インナービューティ", description: "体の内側からキレイに！" },
+  { img: "monster7.png", name: "完全体モンスター", description: "すべてを極めし究極の姿！" }
+];
+
+function showZukan() {
+  document.querySelectorAll(".screen").forEach(s => s.classList.add("hidden"));
+  document.getElementById("zukanScreen").classList.remove("hidden");
+
+  const gallery = document.getElementById("zukanGallery");
+  gallery.innerHTML = "";
+  monsterInfo.forEach((m, index) => {
+    const img = document.createElement("img");
+    img.src = m.img;
+    img.alt = m.name;
+    img.width = 120;
+    img.style.cursor = "pointer";
+    img.onclick = () => showMonsterDetail(index);
+    gallery.appendChild(img);
+  });
+
+  document.getElementById("zukanDetail").innerHTML = "<p>モンスターをクリックして詳細を表示</p>";
+}
+
+function showMonsterDetail(index) {
+  const m = monsterInfo[index];
+  const detail = document.getElementById("zukanDetail");
+  detail.innerHTML = `
+    <h3>${m.name}</h3>
+    <p>${m.description}</p>
+    <img src="${m.img}" alt="${m.name}" width="200">
+  `;
+}
+
+function backToTitle() {
+  document.querySelectorAll(".screen").forEach(s => s.classList.add("hidden"));
+  document.getElementById("titleScreen").classList.remove("hidden");
+}
+
   </script>
 </body>
 </html>
