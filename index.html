@@ -117,14 +117,14 @@
 </head>
 <body>
   <div id="titleScreen" class="screen">
-    <h1>スムージー成長ゲーム</h1>
+    <h1>スムージーモンスター</h1>
     <button onclick="startGame()">スムージーを作る</button>
     <button onclick="showHowToPlay()">遊び方</button>
     <button onclick="showZukan()">モンスター図鑑</button>
   </div>
 
   <div id="gameScreen" class="screen hidden">
-    <h2 id="mealTitle">朝スムージーを作ろう</h2>
+    <h2 id="mealTitle">朝のスムージーを作ろう</h2>
     <div id="gameContent">
       <div class="drop-zone-container">
         <div class="drop-zone" id="dropZone" ondrop="drop(event)" ondragover="allowDrop(event)">
@@ -135,7 +135,7 @@
       </div>
       <div id="foodOptions"></div>
     </div>
-    <button onclick="mixSmoothie()">ミキサーで混ぜる</button>
+    <button onclick="mixSmoothie()">MIX!!!</button>
   </div>
 
   <div id="mixerScreen" class="screen hidden">
@@ -144,14 +144,14 @@
   </div>
 
   <div id="drinkScreen" class="screen hidden">
-    <h2>飲んでみよう！</h2>
+    <h2>完成！</h2>
     <img src="smoothie.png" alt="スムージー" width="200">
-    <p>ごくごくごく...</p>
-    <button onclick="goToGrowth()">次へ</button>
+    <p>どんな味かな...？</p>
+    <button onclick="goToGrowth()">飲んでみる</button>
   </div>
 
   <div id="growthScreen" class="screen hidden">
-    <h2>キャラクターの成長！</h2>
+    <h2>ごちそうさま！</h2>
     <img id="monsterImage" src="" alt="モンスター" width="200">
     <div id="growthResult"></div>
     <p id="result-comment"></p>
@@ -159,7 +159,7 @@
   </div>
 
   <div id="finalResultScreen" class="screen hidden">
-    <h2>最終成長！</h2>
+    <h2>成長したよ！</h2>
     <img id="finalMonsterImage" src="" alt="最終モンスター" width="200">
     <div id="finalResult"></div>
     <p id="finalComment"></p>
@@ -241,7 +241,7 @@
 
     function mixSmoothie() {
       if (selectedFoods.length < 4) {
-        alert("4つの食材を選んでください！");
+        alert("食材は4つ選んでください！");
         return;
       }
       selectedFoods.forEach(name => {
@@ -301,12 +301,12 @@
       });
       const sufficient = Object.entries(count).filter(([_, v]) => v >= 2).map(([k]) => k);
 
-      if (sufficient.length <= 2) return { title: "栄養不足", comment: "バランスが偏っているよ！", img: "monster3.png" };
-      if (sufficient.includes("炭水化物") && sufficient.includes("脂質") && sufficient.includes("タンパク質")) return { title: "パワー全開", comment: "エネルギッシュ！", img: "monster4.png" };
-      if (sufficient.includes("タンパク質") && sufficient.includes("ミネラル")) return { title: "大成長期", comment: "ぐんぐん成長中！", img: "monster5.png" };
-      if (sufficient.includes("ミネラル") && sufficient.includes("ビタミン")) return { title: "整った〜", comment: "中からキレイ！", img: "monster6.png" };
-      if (sufficient.length >= 4) return { title: "完全体", comment: "完璧なバランス！", img: "monster7.png" };
-      return { title: "普通", comment: "まあまあかな？", img: "monster3.png" };
+      if (sufficient.length <= 2) return { title: "栄養不足", comment: "まだまだ栄養が足りないみたい・・・足りない栄養を考えてみよう！", img: "monster3.png" };
+      if (sufficient.includes("炭水化物") && sufficient.includes("脂質") && sufficient.includes("タンパク質")) return { title: "パワー全開", comment: "体力いっぱい！野菜も食べてみる・・・？", img: "monster4.png" };
+      if (sufficient.includes("タンパク質") && sufficient.includes("ミネラル")) return { title: "ぐんぐん成長中！", comment: "体をつくる栄養がいっぱい取れてるね！", img: "monster5.png" };
+      if (sufficient.includes("ミネラル") && sufficient.includes("ビタミン")) return { title: "整った〜", comment: "体を整える栄養がしっかり摂れてるね！体力がないみたい・・・炭水化物やタンパク質もしっかり摂ろう", img: "monster6.png" };
+      if (sufficient.length >= 4) return { title: "パーフェクト！", comment: "完璧なバランス！", img: "monster7.png" };
+      return { title: "・・・", comment: "ちょっと栄養が足りないかも・・・", img: "monster3.png" };
     }
 
     function resetGame() {
@@ -319,13 +319,13 @@
     }
 
     const monsterInfo = [
-  { img: "monster1.png", name: "はじまりモンスター", description: "スムージーの旅はここから！" },
-  { img: "monster2.png", name: "スムージー初心者", description: "まだまだこれから成長するぞ！" },
-  { img: "monster3.png", name: "ふつうモンスター", description: "バランスが今ひとつ..." },
-  { img: "monster4.png", name: "エネルギッシュくん", description: "パワーに満ちた元気モンスター！" },
-  { img: "monster5.png", name: "ぐんぐんモンスター", description: "急成長中で将来有望！" },
-  { img: "monster6.png", name: "インナービューティ", description: "体の内側からキレイに！" },
-  { img: "monster7.png", name: "完全体モンスター", description: "すべてを極めし究極の姿！" }
+  { img: "monster1.png", name: "ベイビーモンスター", description: "まだまだ栄養が足りなさそう..." },
+  { img: "monster2.png", name: "ミニモンスター", description: "モンスターの成長期！たくさん食べさせてあげてね" },
+  { img: "monster3.png", name: "ヘナヘナ", description: "栄養が足りなくて、調子が良くなさそう・・・" },
+  { img: "monster4.png", name: "パワー", description: "パワーに満ちた元気モンスター！炭水化物、脂質、タンパク質がバランスよく取れたみたい。次は野菜もいっぱい食べてね" },
+  { img: "monster5.png", name: "ハイモンスター", description: "とっても背が高い！タンパク質とミネラルがちゃんと取れたみたい！でもちょっと体力がないかも" },
+  { img: "monster6.png", name: "スッキリ", description: "体が整っていて、すっきりしているモンスター。元気がなくておとなしいタイプ。ミネラルとビタミンはちゃんと取れてるね！" },
+  { img: "monster7.png", name: "キラキラモンスター", description: "栄養バランス調整のプロに育ててもらったモンスター！バランスよく食材が選べたみたい！" }
 ];
 
 function showZukan() {
