@@ -90,6 +90,12 @@
       width: 600px;
     }
 
+    .top-image {
+  width: 300px; /* 必要に応じて調整 */
+  margin: 1rem 0;
+}
+
+    
 #zukan img {
   width: 100px; /* 任意の横幅 */
   height: 100px; /* 任意の高さ */
@@ -118,6 +124,9 @@
 <body>
   <div id="titleScreen" class="screen">
     <h1>スムージーモンスター</h1>
+
+  <img src="top.png" alt="トップ画像" class="top-image">
+    
     <button onclick="startGame()">スムージーを作る</button>
     <button onclick="showHowToPlay()">遊び方</button>
     <button onclick="showZukan()">モンスター図鑑</button>
